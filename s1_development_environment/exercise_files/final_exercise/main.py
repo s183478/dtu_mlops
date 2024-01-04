@@ -1,8 +1,9 @@
 import click
 import torch
-from model import MyAwesomeModel
-
+from model import Classifier, train
+from torch import nn, optim
 from data import mnist
+import torch.nn.functional as F
 
 
 @click.group()
@@ -19,8 +20,31 @@ def train(lr):
     print(lr)
 
     # TODO: Implement training loop here
-    model = MyAwesomeModel()
+    model = Classifier()
+    criterion = nn.NLLLoss()
+    optimizer = optim.Adam(model.parameters(), lr=lr)
     train_set, _ = mnist()
+    
+    epochs = 30
+    train_losses, test_losses = [], []
+    for e in range(epochs):
+        running_loss = 0
+        for images, labels in train_set:
+            model.train
+            optimizer.zero_grad()
+
+            log_ps = model(images)
+            loss = criterion(log_ps, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+            
+        if e % 5 == 0 & e != 0:
+            torch.save(model.state_dict(), f'checkpoint_epoch{e}.pth')
+
+    
+    
 
 
 @click.command()
